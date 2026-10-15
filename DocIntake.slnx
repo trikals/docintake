@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DocIntake.Api/DocIntake.Api.csproj" />
+  <Project Path="DocIntake.Tests/DocIntake.Tests.csproj" />
+</Solution>
