@@ -1,0 +1,57 @@
+{
+  "documentType": "bankStatement",
+  "file": "bank-statement-03.txt",
+  "expectedIssues": [],
+  "expected": {
+    "institutionName": "Prairie State Credit Union",
+    "accountHolder": "Priya Nandakumar",
+    "accountNumberMasked": "8754",
+    "periodStart": "2026-01-01",
+    "periodEnd": "2026-01-31",
+    "currency": "USD",
+    "openingBalance": 3161.82,
+    "closingBalance": 4298.45,
+    "transactions": [
+      {
+        "date": "2026-01-03",
+        "description": "Transfer from savings",
+        "amount": 300.0
+      },
+      {
+        "date": "2026-01-13",
+        "description": "Gas station",
+        "amount": -41.6
+      },
+      {
+        "date": "2026-01-13",
+        "description": "ATM withdrawal",
+        "amount": -60.0
+      },
+      {
+        "date": "2026-01-16",
+        "description": "Refund - Hardware store",
+        "amount": 32.5
+      },
+      {
+        "date": "2026-01-24",
+        "description": "Payroll deposit",
+        "amount": 2450.0
+      },
+      {
+        "date": "2026-01-30",
+        "description": "Grocery - Corner Market",
+        "amount": -86.42
+      },
+      {
+        "date": "2026-01-30",
+        "description": "Coffee shop",
+        "amount": -7.85
+      },
+      {
+        "date": "2026-01-31",
+        "description": "Rent payment",
+        "amount": -1450.0
+      }
+    ]
+  }
+}

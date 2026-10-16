@@ -1,0 +1,17 @@
+RETURN ADVICE
+=============
+
+Origin: Oakline Utilities Billing
+Payee: Harold J. Pruitt
+RDFI: Harbor Light Bank
+Entry class: CCD
+Settlement date: Feb 03, 2026
+Returned: Feb 02, 2026
+Trace no.: 802699607490134
+Orig. trace no.: 139885871896035
+Amount: 218.91
+Code: R03
+Description: Account Closed
+
+------------------------------------------------------------
+SYNTHETIC SAMPLE - fictional data for software testing, not a real document

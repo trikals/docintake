@@ -1,0 +1,57 @@
+{
+  "documentType": "bankStatement",
+  "file": "bank-statement-05.docx",
+  "expectedIssues": [
+    {
+      "rule": "BalanceMismatch",
+      "path": "closingBalance"
+    }
+  ],
+  "expected": {
+    "institutionName": "Cobblestone Federal Credit Union",
+    "accountHolder": "Elena Castellanos",
+    "accountNumberMasked": "3005",
+    "periodStart": "2026-04-01",
+    "periodEnd": "2026-04-30",
+    "currency": "USD",
+    "openingBalance": 3698.82,
+    "closingBalance": 4988.48,
+    "transactions": [
+      {
+        "date": "2026-04-01",
+        "description": "Online subscription",
+        "amount": -14.99
+      },
+      {
+        "date": "2026-04-04",
+        "description": "ATM withdrawal",
+        "amount": -60.0
+      },
+      {
+        "date": "2026-04-07",
+        "description": "Coffee shop",
+        "amount": -7.85
+      },
+      {
+        "date": "2026-04-09",
+        "description": "Rent payment",
+        "amount": -1450.0
+      },
+      {
+        "date": "2026-04-23",
+        "description": "Transfer from savings",
+        "amount": 300.0
+      },
+      {
+        "date": "2026-04-23",
+        "description": "Payroll deposit",
+        "amount": 2450.0
+      },
+      {
+        "date": "2026-04-29",
+        "description": "Refund - Hardware store",
+        "amount": 32.5
+      }
+    ]
+  }
+}

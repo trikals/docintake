@@ -1,0 +1,23 @@
+{
+  "documentType": "achReturnNotice",
+  "file": "ach-return-05.pdf",
+  "expectedIssues": [
+    {
+      "rule": "InvalidReturnCode",
+      "path": "returnReasonCode"
+    }
+  ],
+  "expected": {
+    "originatorName": "Riverbend Loan Servicing",
+    "receiverName": "Walker Plumbing LLC",
+    "rdfiName": "Cobblestone FCU",
+    "secCode": "CCD",
+    "originalEffectiveDate": "2026-06-18",
+    "returnDate": "2026-06-21",
+    "traceNumber": "764294511467428",
+    "originalTraceNumber": "437475394759883",
+    "amount": 1311.05,
+    "returnReasonCode": "R88",
+    "returnReasonDescription": "Unknown reason"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "achReturnNotice",
+  "type": "object",
+  "properties": {
+    "originatorName": {
+      "type": "string"
+    },
+    "receiverName": {
+      "type": "string"
+    },
+    "rdfiName": {
+      "type": "string"
+    },
+    "secCode": {
+      "type": "string"
+    },
+    "originalEffectiveDate": {
+      "type": "string"
+    },
+    "returnDate": {
+      "type": "string"
+    },
+    "traceNumber": {
+      "type": "string"
+    },
+    "originalTraceNumber": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "returnReasonCode": {
+      "type": "string"
+    },
+    "returnReasonDescription": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "originatorName",
+    "receiverName",
+    "rdfiName",
+    "secCode",
+    "originalEffectiveDate",
+    "returnDate",
+    "traceNumber",
+    "originalTraceNumber",
+    "amount",
+    "returnReasonCode",
+    "returnReasonDescription"
+  ],
+  "additionalProperties": false
+}

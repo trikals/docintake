@@ -1,0 +1,30 @@
+{
+  "documentType": "invoice",
+  "file": "invoice-01.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "vendorName": "Lakeshore Office Supply Co.",
+    "invoiceNumber": "INV-202601554",
+    "invoiceDate": "2026-07-20",
+    "dueDate": "2026-08-19",
+    "currency": "USD",
+    "billTo": "Maple Ridge Dental Group",
+    "lineItems": [
+      {
+        "description": "Labor, per hour",
+        "quantity": 6,
+        "unitPrice": 65.0,
+        "amount": 390.0
+      },
+      {
+        "description": "Printed brochures (100)",
+        "quantity": 6,
+        "unitPrice": 128.0,
+        "amount": 768.0
+      }
+    ],
+    "subtotal": 1158.0,
+    "tax": 101.32,
+    "total": 1259.32
+  }
+}

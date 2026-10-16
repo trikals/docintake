@@ -1,0 +1,62 @@
+{
+  "documentType": "bankStatement",
+  "file": "bank-statement-01.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "institutionName": "Fox River Community Bank",
+    "accountHolder": "Dana R. Whitfield",
+    "accountNumberMasked": "8310",
+    "periodStart": "2026-06-01",
+    "periodEnd": "2026-06-30",
+    "currency": "USD",
+    "openingBalance": 3934.46,
+    "closingBalance": 4636.72,
+    "transactions": [
+      {
+        "date": "2026-06-03",
+        "description": "Gas station",
+        "amount": -41.6
+      },
+      {
+        "date": "2026-06-05",
+        "description": "Restaurant",
+        "amount": -58.9
+      },
+      {
+        "date": "2026-06-13",
+        "description": "Refund - Hardware store",
+        "amount": 32.5
+      },
+      {
+        "date": "2026-06-14",
+        "description": "Coffee shop",
+        "amount": -7.85
+      },
+      {
+        "date": "2026-06-22",
+        "description": "Grocery - Corner Market",
+        "amount": -86.42
+      },
+      {
+        "date": "2026-06-23",
+        "description": "Payroll deposit",
+        "amount": 2450.0
+      },
+      {
+        "date": "2026-06-23",
+        "description": "Rent payment",
+        "amount": -1450.0
+      },
+      {
+        "date": "2026-06-26",
+        "description": "Electric utility payment",
+        "amount": -112.3
+      },
+      {
+        "date": "2026-06-30",
+        "description": "Pharmacy",
+        "amount": -23.17
+      }
+    ]
+  }
+}

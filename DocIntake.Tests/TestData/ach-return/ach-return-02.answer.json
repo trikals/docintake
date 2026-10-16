@@ -1,0 +1,18 @@
+{
+  "documentType": "achReturnNotice",
+  "file": "ach-return-02.txt",
+  "expectedIssues": [],
+  "expected": {
+    "originatorName": "Evergreen Insurance Premiums",
+    "receiverName": "Keisha M. Bourne",
+    "rdfiName": "Iron Gate Bank",
+    "secCode": "WEB",
+    "originalEffectiveDate": "2026-06-16",
+    "returnDate": "2026-06-20",
+    "traceNumber": "713129481123306",
+    "originalTraceNumber": "449624279831119",
+    "amount": 1257.68,
+    "returnReasonCode": "R02",
+    "returnReasonDescription": "Account Closed"
+  }
+}

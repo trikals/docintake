@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "utilityBill",
+  "type": "object",
+  "properties": {
+    "providerName": {
+      "type": "string"
+    },
+    "utilityType": {
+      "type": "string",
+      "enum": [
+        "Electric",
+        "Gas",
+        "Water",
+        "Other"
+      ]
+    },
+    "accountNumberMasked": {
+      "type": "string"
+    },
+    "serviceAddress": {
+      "type": "string"
+    },
+    "statementDate": {
+      "type": "string"
+    },
+    "periodStart": {
+      "type": "string"
+    },
+    "periodEnd": {
+      "type": "string"
+    },
+    "dueDate": {
+      "type": "string"
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "quantity",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    "charges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "description",
+          "amount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "previousBalance": {
+      "type": "number"
+    },
+    "paymentsReceived": {
+      "type": "number"
+    },
+    "currentCharges": {
+      "type": "number"
+    },
+    "amountDue": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "providerName",
+    "utilityType",
+    "accountNumberMasked",
+    "serviceAddress",
+    "statementDate",
+    "periodStart",
+    "periodEnd",
+    "dueDate",
+    "usage",
+    "charges",
+    "previousBalance",
+    "paymentsReceived",
+    "currentCharges",
+    "amountDue"
+  ],
+  "additionalProperties": false
+}

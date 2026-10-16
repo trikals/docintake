@@ -1,0 +1,173 @@
+{
+  "description": "Synthetic sample set. All data is fictional.",
+  "documents": [
+    {
+      "file": "invoice/invoice-01.pdf",
+      "answer": "invoice/invoice-01.answer.json",
+      "documentType": "invoice",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "invoice/invoice-02.pdf",
+      "answer": "invoice/invoice-02.answer.json",
+      "documentType": "invoice",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "invoice/invoice-03.docx",
+      "answer": "invoice/invoice-03.answer.json",
+      "documentType": "invoice",
+      "format": "docx",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "invoice/invoice-04.txt",
+      "answer": "invoice/invoice-04.answer.json",
+      "documentType": "invoice",
+      "format": "txt",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "invoice/invoice-05.pdf",
+      "answer": "invoice/invoice-05.answer.json",
+      "documentType": "invoice",
+      "format": "pdf",
+      "expectedIssueCount": 1
+    },
+    {
+      "file": "invoice/invoice-06.pdf",
+      "answer": "invoice/invoice-06.answer.json",
+      "documentType": "invoice",
+      "format": "pdf",
+      "expectedIssueCount": 2
+    },
+    {
+      "file": "bank-statement/bank-statement-01.pdf",
+      "answer": "bank-statement/bank-statement-01.answer.json",
+      "documentType": "bankStatement",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "bank-statement/bank-statement-02.pdf",
+      "answer": "bank-statement/bank-statement-02.answer.json",
+      "documentType": "bankStatement",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "bank-statement/bank-statement-03.txt",
+      "answer": "bank-statement/bank-statement-03.answer.json",
+      "documentType": "bankStatement",
+      "format": "txt",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "bank-statement/bank-statement-04.pdf",
+      "answer": "bank-statement/bank-statement-04.answer.json",
+      "documentType": "bankStatement",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "bank-statement/bank-statement-05.docx",
+      "answer": "bank-statement/bank-statement-05.answer.json",
+      "documentType": "bankStatement",
+      "format": "docx",
+      "expectedIssueCount": 1
+    },
+    {
+      "file": "bank-statement/bank-statement-06.pdf",
+      "answer": "bank-statement/bank-statement-06.answer.json",
+      "documentType": "bankStatement",
+      "format": "pdf",
+      "expectedIssueCount": 1
+    },
+    {
+      "file": "ach-return/ach-return-01.pdf",
+      "answer": "ach-return/ach-return-01.answer.json",
+      "documentType": "achReturnNotice",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "ach-return/ach-return-02.txt",
+      "answer": "ach-return/ach-return-02.answer.json",
+      "documentType": "achReturnNotice",
+      "format": "txt",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "ach-return/ach-return-03.docx",
+      "answer": "ach-return/ach-return-03.answer.json",
+      "documentType": "achReturnNotice",
+      "format": "docx",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "ach-return/ach-return-04.pdf",
+      "answer": "ach-return/ach-return-04.answer.json",
+      "documentType": "achReturnNotice",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "ach-return/ach-return-05.pdf",
+      "answer": "ach-return/ach-return-05.answer.json",
+      "documentType": "achReturnNotice",
+      "format": "pdf",
+      "expectedIssueCount": 1
+    },
+    {
+      "file": "ach-return/ach-return-06.txt",
+      "answer": "ach-return/ach-return-06.answer.json",
+      "documentType": "achReturnNotice",
+      "format": "txt",
+      "expectedIssueCount": 2
+    },
+    {
+      "file": "utility-bill/utility-bill-01.pdf",
+      "answer": "utility-bill/utility-bill-01.answer.json",
+      "documentType": "utilityBill",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "utility-bill/utility-bill-02.pdf",
+      "answer": "utility-bill/utility-bill-02.answer.json",
+      "documentType": "utilityBill",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "utility-bill/utility-bill-03.docx",
+      "answer": "utility-bill/utility-bill-03.answer.json",
+      "documentType": "utilityBill",
+      "format": "docx",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "utility-bill/utility-bill-04.pdf",
+      "answer": "utility-bill/utility-bill-04.answer.json",
+      "documentType": "utilityBill",
+      "format": "pdf",
+      "expectedIssueCount": 0
+    },
+    {
+      "file": "utility-bill/utility-bill-05.txt",
+      "answer": "utility-bill/utility-bill-05.answer.json",
+      "documentType": "utilityBill",
+      "format": "txt",
+      "expectedIssueCount": 1
+    },
+    {
+      "file": "utility-bill/utility-bill-06.pdf",
+      "answer": "utility-bill/utility-bill-06.answer.json",
+      "documentType": "utilityBill",
+      "format": "pdf",
+      "expectedIssueCount": 2
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "documentType": "bankStatement",
+  "file": "bank-statement-02.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "institutionName": "Lakeview Savings & Trust",
+    "accountHolder": "Marcus Oyelaran",
+    "accountNumberMasked": "7759",
+    "periodStart": "2026-02-01",
+    "periodEnd": "2026-02-28",
+    "currency": "USD",
+    "openingBalance": 1768.5,
+    "closingBalance": 2498.74,
+    "transactions": [
+      {
+        "date": "2026-02-07",
+        "description": "Grocery - Corner Market",
+        "amount": -86.42
+      },
+      {
+        "date": "2026-02-11",
+        "description": "Payroll deposit",
+        "amount": 2450.0
+      },
+      {
+        "date": "2026-02-15",
+        "description": "Restaurant",
+        "amount": -58.9
+      },
+      {
+        "date": "2026-02-20",
+        "description": "Rent payment",
+        "amount": -1450.0
+      },
+      {
+        "date": "2026-02-20",
+        "description": "Online subscription",
+        "amount": -14.99
+      },
+      {
+        "date": "2026-02-24",
+        "description": "Gas station",
+        "amount": -41.6
+      },
+      {
+        "date": "2026-02-27",
+        "description": "ATM withdrawal",
+        "amount": -60.0
+      },
+      {
+        "date": "2026-02-27",
+        "description": "Coffee shop",
+        "amount": -7.85
+      }
+    ]
+  }
+}

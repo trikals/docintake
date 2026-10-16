@@ -1,0 +1,18 @@
+{
+  "documentType": "achReturnNotice",
+  "file": "ach-return-04.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "originatorName": "Brightside Tuition Services",
+    "receiverName": "Sofia Ramirez-Lund",
+    "rdfiName": "Lakeview Savings & Trust",
+    "secCode": "WEB",
+    "originalEffectiveDate": "2026-01-14",
+    "returnDate": "2026-01-18",
+    "traceNumber": "394168724388962",
+    "originalTraceNumber": "881995259980719",
+    "amount": 290.91,
+    "returnReasonCode": "R16",
+    "returnReasonDescription": "Account Frozen"
+  }
+}

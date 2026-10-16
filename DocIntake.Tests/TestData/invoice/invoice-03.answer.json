@@ -1,0 +1,42 @@
+{
+  "documentType": "invoice",
+  "file": "invoice-03.docx",
+  "expectedIssues": [],
+  "expected": {
+    "vendorName": "Northgate IT Services",
+    "invoiceNumber": "INV-202603577",
+    "invoiceDate": "2026-06-21",
+    "dueDate": "2026-07-21",
+    "currency": "USD",
+    "billTo": "Willow Creek Accounting",
+    "lineItems": [
+      {
+        "description": "Copy paper, case",
+        "quantity": 5,
+        "unitPrice": 38.5,
+        "amount": 192.5
+      },
+      {
+        "description": "Printed brochures (100)",
+        "quantity": 4,
+        "unitPrice": 128.0,
+        "amount": 512.0
+      },
+      {
+        "description": "Standing desk mat",
+        "quantity": 6,
+        "unitPrice": 54.0,
+        "amount": 324.0
+      },
+      {
+        "description": "Monthly IT support",
+        "quantity": 6,
+        "unitPrice": 450.0,
+        "amount": 2700.0
+      }
+    ],
+    "subtotal": 3728.5,
+    "tax": 326.24,
+    "total": 4054.74
+  }
+}

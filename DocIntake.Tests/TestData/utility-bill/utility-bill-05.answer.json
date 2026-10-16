@@ -1,0 +1,46 @@
+{
+  "documentType": "utilityBill",
+  "file": "utility-bill-05.txt",
+  "expectedIssues": [
+    {
+      "rule": "AmountDueMismatch",
+      "path": "amountDue"
+    }
+  ],
+  "expected": {
+    "providerName": "Cedar Valley Gas Works",
+    "utilityType": "Gas",
+    "accountNumberMasked": "9861",
+    "serviceAddress": "770 Lakeview Dr, Evanston, IL 60201",
+    "statementDate": "2026-03-05",
+    "periodStart": "2026-02-03",
+    "periodEnd": "2026-03-02",
+    "dueDate": "2026-03-26",
+    "usage": {
+      "quantity": 65,
+      "unit": "therms"
+    },
+    "charges": [
+      {
+        "description": "Gas supply",
+        "amount": 7.15
+      },
+      {
+        "description": "Customer charge",
+        "amount": 12.0
+      },
+      {
+        "description": "Delivery charge",
+        "amount": 25.09
+      },
+      {
+        "description": "Taxes and fees",
+        "amount": 3.55
+      }
+    ],
+    "previousBalance": 133.19,
+    "paymentsReceived": 133.19,
+    "currentCharges": 47.79,
+    "amountDue": 62.79
+  }
+}

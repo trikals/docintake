@@ -1,0 +1,30 @@
+{
+  "documentType": "invoice",
+  "file": "invoice-04.txt",
+  "expectedIssues": [],
+  "expected": {
+    "vendorName": "Prairie Freight Partners",
+    "invoiceNumber": "INV-202604128",
+    "invoiceDate": "2026-04-24",
+    "dueDate": "2026-06-08",
+    "currency": "USD",
+    "billTo": "Summit Peak Fitness",
+    "lineItems": [
+      {
+        "description": "Network cable 25ft",
+        "quantity": 3,
+        "unitPrice": 14.4,
+        "amount": 43.2
+      },
+      {
+        "description": "Printed brochures (100)",
+        "quantity": 1,
+        "unitPrice": 128.0,
+        "amount": 128.0
+      }
+    ],
+    "subtotal": 171.2,
+    "tax": 14.98,
+    "total": 186.18
+  }
+}

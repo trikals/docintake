@@ -1,0 +1,21 @@
+INVOICE
+=======
+
+<b>Prairie Freight Partners</b>
+
+Invoice No.: INV-202604128
+Invoice date: Apr 24, 2026
+Due date: Jun 08, 2026
+Bill to: Summit Peak Fitness
+
+Description              Qty  Unit price  Amount
+-----------------------  ---  ----------  ------
+Network cable 25ft       3    14.40       43.20 
+Printed brochures (100)  1    128.00      128.00
+
+Subtotal: $171.20
+Sales tax (8.75%): $14.98
+TOTAL DUE: $186.18
+
+------------------------------------------------------------
+SYNTHETIC SAMPLE - fictional data for software testing, not a real document

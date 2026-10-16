@@ -1,0 +1,26 @@
+PRAIRIE STATE CREDIT UNION
+==========================
+
+CHECKING ACCOUNT STATEMENT
+==========================
+
+Account holder: Priya Nandakumar
+Account number: XXXXXX8754
+Statement period: Jan 01, 2026 to Jan 31, 2026
+Opening balance: $3,161.82
+
+Date          Description              Amount   
+------------  -----------------------  ---------
+Jan 03, 2026  Transfer from savings    300.00   
+Jan 13, 2026  Gas station              -41.60   
+Jan 13, 2026  ATM withdrawal           -60.00   
+Jan 16, 2026  Refund - Hardware store  32.50    
+Jan 24, 2026  Payroll deposit          2,450.00 
+Jan 30, 2026  Grocery - Corner Market  -86.42   
+Jan 30, 2026  Coffee shop              -7.85    
+Jan 31, 2026  Rent payment             -1,450.00
+
+Closing balance: $4,298.45
+
+------------------------------------------------------------
+SYNTHETIC SAMPLE - fictional data for software testing, not a real document

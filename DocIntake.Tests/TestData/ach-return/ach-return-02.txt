@@ -1,0 +1,18 @@
+NOTICE OF RETURNED ACH ENTRY
+============================
+
+Iron Gate Bank has returned an ACH entry originated by Evergreen Insurance Premiums for receiver Keisha M. Bourne.
+
+Field           Value          
+--------------  ---------------
+SEC             WEB            
+Effective date  2026-06-16     
+Returned on     2026-06-20     
+Trace           713129481123306
+Original trace  449624279831119
+Amount          1,257.68       
+Code            R02            
+Reason          Account Closed 
+
+------------------------------------------------------------
+SYNTHETIC SAMPLE - fictional data for software testing, not a real document

@@ -1,0 +1,41 @@
+{
+  "documentType": "utilityBill",
+  "file": "utility-bill-02.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "providerName": "Prairie Gas & Heat",
+    "utilityType": "Gas",
+    "accountNumberMasked": "5706",
+    "serviceAddress": "92 Harbor Road, Waukegan, IL 60085",
+    "statementDate": "2026-09-05",
+    "periodStart": "2026-08-03",
+    "periodEnd": "2026-09-02",
+    "dueDate": "2026-09-26",
+    "usage": {
+      "quantity": 30,
+      "unit": "therms"
+    },
+    "charges": [
+      {
+        "description": "Gas supply",
+        "amount": 3.3
+      },
+      {
+        "description": "Customer charge",
+        "amount": 9.5
+      },
+      {
+        "description": "Delivery charge",
+        "amount": 21.8
+      },
+      {
+        "description": "Taxes and fees",
+        "amount": 4.1
+      }
+    ],
+    "previousBalance": 70.76,
+    "paymentsReceived": 65.76,
+    "currentCharges": 38.7,
+    "amountDue": 43.7
+  }
+}

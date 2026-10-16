@@ -1,0 +1,18 @@
+{
+  "documentType": "achReturnNotice",
+  "file": "ach-return-03.docx",
+  "expectedIssues": [],
+  "expected": {
+    "originatorName": "Metro Gym Memberships",
+    "receiverName": "Nguyen Family Trust",
+    "rdfiName": "Prairie State Credit Union",
+    "secCode": "WEB",
+    "originalEffectiveDate": "2026-05-14",
+    "returnDate": "2026-05-18",
+    "traceNumber": "245680644325406",
+    "originalTraceNumber": "941965702669965",
+    "amount": 407.24,
+    "returnReasonCode": "R10",
+    "returnReasonDescription": "Customer Advises Not Authorized"
+  }
+}

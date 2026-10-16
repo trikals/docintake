@@ -1,0 +1,41 @@
+{
+  "documentType": "invoice",
+  "file": "invoice-05.pdf",
+  "expectedIssues": [
+    {
+      "rule": "LineAmountMismatch",
+      "path": "lineItems[0].amount"
+    }
+  ],
+  "expected": {
+    "vendorName": "Cedar & Pine Catering",
+    "invoiceNumber": "INV-202605557",
+    "invoiceDate": "2026-03-05",
+    "dueDate": "2026-04-04",
+    "currency": "USD",
+    "billTo": "Redstone Property Mgmt",
+    "lineItems": [
+      {
+        "description": "Delivery fee",
+        "quantity": 2,
+        "unitPrice": 35.0,
+        "amount": 80.0
+      },
+      {
+        "description": "Labor, per hour",
+        "quantity": 2,
+        "unitPrice": 65.0,
+        "amount": 130.0
+      },
+      {
+        "description": "Laminating pouches",
+        "quantity": 3,
+        "unitPrice": 19.8,
+        "amount": 59.4
+      }
+    ],
+    "subtotal": 269.4,
+    "tax": 23.57,
+    "total": 292.97
+  }
+}

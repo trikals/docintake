@@ -1,0 +1,50 @@
+{
+  "documentType": "utilityBill",
+  "file": "utility-bill-06.pdf",
+  "expectedIssues": [
+    {
+      "rule": "ChargesSumMismatch",
+      "path": "currentCharges"
+    },
+    {
+      "rule": "DueBeforeStatement",
+      "path": "dueDate"
+    }
+  ],
+  "expected": {
+    "providerName": "Summit Municipal Water",
+    "utilityType": "Water",
+    "accountNumberMasked": "6814",
+    "serviceAddress": "260 Maple Lane, Joliet, IL 60435",
+    "statementDate": "2026-02-05",
+    "periodStart": "2026-01-03",
+    "periodEnd": "2026-02-02",
+    "dueDate": "2026-02-03",
+    "usage": {
+      "quantity": 64,
+      "unit": "CCF"
+    },
+    "charges": [
+      {
+        "description": "Water usage",
+        "amount": 7.04
+      },
+      {
+        "description": "Customer charge",
+        "amount": 12.0
+      },
+      {
+        "description": "Delivery charge",
+        "amount": 19.78
+      },
+      {
+        "description": "Taxes and fees",
+        "amount": 2.14
+      }
+    ],
+    "previousBalance": 166.73,
+    "paymentsReceived": 161.73,
+    "currentCharges": 49.46,
+    "amountDue": 54.46
+  }
+}

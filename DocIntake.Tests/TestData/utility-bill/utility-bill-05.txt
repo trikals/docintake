@@ -1,0 +1,18 @@
+CEDAR VALLEY GAS WORKS - GAS SERVICE
+====================================
+
+Account ending 9861 | 770 Lakeview Dr, Evanston, IL 60201
+
+Bill date 03/05/2026. Billing period 02/03/2026 to 03/02/2026. You used 65 therms.
+
+Description      Amount ($)
+---------------  ----------
+Gas supply       7.15      
+Customer charge  12.00     
+Delivery charge  25.09     
+Taxes and fees   3.55      
+
+Balance forward 133.19; payments 133.19; new charges 47.79. Please pay 62.79 by 03/26/2026.
+
+------------------------------------------------------------
+SYNTHETIC SAMPLE - fictional data for software testing, not a real document

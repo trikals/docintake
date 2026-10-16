@@ -1,0 +1,18 @@
+{
+  "documentType": "achReturnNotice",
+  "file": "ach-return-01.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "originatorName": "Great Lakes Property Mgmt",
+    "receiverName": "Alan P. Dorsey",
+    "rdfiName": "Fox River Community Bank",
+    "secCode": "PPD",
+    "originalEffectiveDate": "2026-01-06",
+    "returnDate": "2026-01-08",
+    "traceNumber": "396106964276293",
+    "originalTraceNumber": "512988613297599",
+    "amount": 1492.06,
+    "returnReasonCode": "R01",
+    "returnReasonDescription": "Insufficient Funds"
+  }
+}

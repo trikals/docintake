@@ -1,0 +1,27 @@
+{
+  "documentType": "achReturnNotice",
+  "file": "ach-return-06.txt",
+  "expectedIssues": [
+    {
+      "rule": "ReasonDescriptionMismatch",
+      "path": "returnReasonDescription"
+    },
+    {
+      "rule": "ReturnBeforeEffective",
+      "path": "returnDate"
+    }
+  ],
+  "expected": {
+    "originatorName": "Oakline Utilities Billing",
+    "receiverName": "Harold J. Pruitt",
+    "rdfiName": "Harbor Light Bank",
+    "secCode": "CCD",
+    "originalEffectiveDate": "2026-02-03",
+    "returnDate": "2026-02-02",
+    "traceNumber": "802699607490134",
+    "originalTraceNumber": "139885871896035",
+    "amount": 218.91,
+    "returnReasonCode": "R03",
+    "returnReasonDescription": "Account Closed"
+  }
+}

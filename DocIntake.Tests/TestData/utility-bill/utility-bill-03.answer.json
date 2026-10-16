@@ -1,0 +1,41 @@
+{
+  "documentType": "utilityBill",
+  "file": "utility-bill-03.docx",
+  "expectedIssues": [],
+  "expected": {
+    "providerName": "Riverbend Water Authority",
+    "utilityType": "Water",
+    "accountNumberMasked": "5998",
+    "serviceAddress": "1507 Prairie Ave, Naperville, IL 60540",
+    "statementDate": "2026-07-05",
+    "periodStart": "2026-06-03",
+    "periodEnd": "2026-07-02",
+    "dueDate": "2026-07-26",
+    "usage": {
+      "quantity": 109,
+      "unit": "CCF"
+    },
+    "charges": [
+      {
+        "description": "Water usage",
+        "amount": 103.55
+      },
+      {
+        "description": "Customer charge",
+        "amount": 12.0
+      },
+      {
+        "description": "Delivery charge",
+        "amount": 21.34
+      },
+      {
+        "description": "Taxes and fees",
+        "amount": 1.57
+      }
+    ],
+    "previousBalance": 84.69,
+    "paymentsReceived": 84.69,
+    "currentCharges": 138.46,
+    "amountDue": 138.46
+  }
+}

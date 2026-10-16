@@ -1,0 +1,30 @@
+{
+  "documentType": "invoice",
+  "file": "invoice-02.pdf",
+  "expectedIssues": [],
+  "expected": {
+    "vendorName": "Brightwater Printing LLC",
+    "invoiceNumber": "INV-202602844",
+    "invoiceDate": "2026-05-04",
+    "dueDate": "2026-05-19",
+    "currency": "USD",
+    "billTo": "Orchard Lane Bakery",
+    "lineItems": [
+      {
+        "description": "Toner cartridge",
+        "quantity": 2,
+        "unitPrice": 112.0,
+        "amount": 224.0
+      },
+      {
+        "description": "Labor, per hour",
+        "quantity": 5,
+        "unitPrice": 65.0,
+        "amount": 325.0
+      }
+    ],
+    "subtotal": 549.0,
+    "tax": 48.04,
+    "total": 597.04
+  }
+}

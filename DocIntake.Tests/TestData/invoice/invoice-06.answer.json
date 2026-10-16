@@ -1,0 +1,45 @@
+{
+  "documentType": "invoice",
+  "file": "invoice-06.pdf",
+  "expectedIssues": [
+    {
+      "rule": "TotalMismatch",
+      "path": "total"
+    },
+    {
+      "rule": "DueBeforeInvoice",
+      "path": "dueDate"
+    }
+  ],
+  "expected": {
+    "vendorName": "Harborview Cleaning Co.",
+    "invoiceNumber": "INV-202606576",
+    "invoiceDate": "2026-06-23",
+    "dueDate": "2026-06-20",
+    "currency": "USD",
+    "billTo": "Blue Heron Veterinary",
+    "lineItems": [
+      {
+        "description": "Toner cartridge",
+        "quantity": 1,
+        "unitPrice": 112.0,
+        "amount": 112.0
+      },
+      {
+        "description": "Catering platter",
+        "quantity": 2,
+        "unitPrice": 86.25,
+        "amount": 172.5
+      },
+      {
+        "description": "Monthly IT support",
+        "quantity": 3,
+        "unitPrice": 450.0,
+        "amount": 1350.0
+      }
+    ],
+    "subtotal": 1634.5,
+    "tax": 143.02,
+    "total": 1802.52
+  }
+}

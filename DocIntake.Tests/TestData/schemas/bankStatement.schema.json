@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "bankStatement",
+  "type": "object",
+  "properties": {
+    "institutionName": {
+      "type": "string"
+    },
+    "accountHolder": {
+      "type": "string"
+    },
+    "accountNumberMasked": {
+      "type": "string"
+    },
+    "periodStart": {
+      "type": "string"
+    },
+    "periodEnd": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "openingBalance": {
+      "type": "number"
+    },
+    "closingBalance": {
+      "type": "number"
+    },
+    "transactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "date",
+          "description",
+          "amount"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "institutionName",
+    "accountHolder",
+    "accountNumberMasked",
+    "periodStart",
+    "periodEnd",
+    "currency",
+    "openingBalance",
+    "closingBalance",
+    "transactions"
+  ],
+  "additionalProperties": false
+}
