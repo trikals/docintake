@@ -25,6 +25,10 @@ try
 
     builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
     builder.Services.AddDocumentStorage(builder.Configuration);
+
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
+
     builder.Services.AddHealthChecks();
     builder.Services.AddOpenApi();
 
@@ -45,9 +49,14 @@ try
         };
     });
 
+    app.UseExceptionHandler();
+
     if (app.Environment.IsDevelopment())
     {
+        // TEMPORARY: used to test the exception handler, then delete
+        //app.MapGet("/boom", () => { throw new InvalidOperationException("Test failure"); });        
         app.MapOpenApi();
+
     }
 
     app.MapHealthChecks("/health");
