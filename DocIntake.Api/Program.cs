@@ -1,3 +1,4 @@
+using DocIntake.Api.Configuration;
 using DocIntake.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ var connectionString = builder.Configuration.GetConnectionString("Default")
 
 // Services
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDocumentStorage(builder.Configuration);
 builder.Services.AddHealthChecks();
 builder.Services.AddOpenApi();
 
