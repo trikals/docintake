@@ -32,6 +32,10 @@ try
     builder.Services.AddHealthChecks();
     builder.Services.AddOpenApi();
 
+    builder.Services.AddControllers()
+        .AddJsonOptions(o =>
+            o.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
+
     var app = builder.Build();
 
     // One summary line per request. Successful /health calls are hidden because the
@@ -61,7 +65,7 @@ try
 
     app.MapHealthChecks("/health");
 
-    // Document endpoints will be mapped here next
+    app.MapControllers();
 
     app.Run();
     return 0;

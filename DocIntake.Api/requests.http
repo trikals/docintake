@@ -1,0 +1,37 @@
+@host = http://localhost:5237
+
+### Health
+GET {{host}}/health
+
+### Upload an invoice (PDF)
+POST {{host}}/documents
+Content-Type: multipart/form-data; boundary=X
+
+--X
+Content-Disposition: form-data; name="file"; filename="invoice-01.pdf"
+Content-Type: application/pdf
+
+< ../DocIntake.Tests/TestData/invoice/invoice-01.pdf
+--X--
+
+### Upload a text file (TXT)
+POST {{host}}/documents
+Content-Type: multipart/form-data; boundary=X
+
+--X
+Content-Disposition: form-data; name="file"; filename="bank-statement-03.txt"
+Content-Type: text/plain
+
+< ../DocIntake.Tests/TestData/bank-statement/bank-statement-03.txt
+--X--
+
+### Unsupported type (expect 415)
+POST {{host}}/documents
+Content-Type: multipart/form-data; boundary=X
+
+--X
+Content-Disposition: form-data; name="file"; filename="photo.png"
+Content-Type: image/png
+
+fake image bytes
+--X--
