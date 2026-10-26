@@ -22,4 +22,8 @@
     <ProjectReference Include="..\DocIntake.Api\DocIntake.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="TestData\**\*.*" Exclude="TestData\**\.DS_Store" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
