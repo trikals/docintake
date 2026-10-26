@@ -103,4 +103,61 @@ public class DocumentsController(
 
         return Ok(DocumentResponse.From(document));
     }
+
+    /// <summary>Stream the original file (shown inline, so a PDF opens in the browser's viewer).</summary>
+    [HttpGet("{id:int}/file")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetFile(int id, CancellationToken ct)
+    {
+        var document = await db.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id && !d.IsArchived, ct);
+        if (document is null)
+        {
+            log.LogWarning("File requested for missing document {DocumentId}", id);
+            return Problem("Document not found.", statusCode: StatusCodes.Status404NotFound);
+        }
+
+        var stream = await storage.OpenReadAsync(document.StorageId, ct);
+        if (stream is null)
+        {
+            // Row exists but the blob is gone: data inconsistency worth noticing.
+            log.LogError("Blob {StorageId} missing for document {DocumentId}", document.StorageId, id);
+            return Problem("The stored file could not be found.", statusCode: StatusCodes.Status404NotFound);
+        }
+
+        Response.Headers["X-Content-Type-Options"] = "nosniff";
+        log.LogInformation("Streaming file for document {DocumentId} ({Size} bytes)", id, document.FileSize);
+        return File(stream, document.ContentType, enableRangeProcessing: true);
+    }
+
+    /// <summary>Delete the document row and its stored file.</summary>
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    {
+        var document = await db.Documents.FirstOrDefaultAsync(d => d.Id == id, ct);
+        if (document is null)
+        {
+            log.LogWarning("Delete requested for missing document {DocumentId}", id);
+            return Problem("Document not found.", statusCode: StatusCodes.Status404NotFound);
+        }
+
+        // Row first: a leftover blob is invisible and expires by lifecycle rule,
+        // but a row pointing at a missing blob would be a visible, broken document.
+        db.Documents.Remove(document);
+        await db.SaveChangesAsync(ct);
+
+        try
+        {
+            await storage.DeleteAsync(document.StorageId, ct);
+        }
+        catch (Exception ex)
+        {
+            log.LogWarning(ex, "Document {DocumentId} deleted but blob {StorageId} could not be removed", id, document.StorageId);
+        }
+
+        log.LogInformation("Document {DocumentId} deleted", id);
+        return NoContent();
+    }
 }

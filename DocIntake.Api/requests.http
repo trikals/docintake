@@ -44,3 +44,12 @@ GET {{host}}/documents/1
 
 ### Missing document (expect 404)
 GET {{host}}/documents/999999
+
+### Download original (open in a browser instead to see the PDF viewer)
+GET {{host}}/documents/1/file
+
+### Delete a document (removes row and blob)
+DELETE {{host}}/documents/1
+
+### Delete again (expect 404)
+DELETE {{host}}/documents/1
