@@ -35,3 +35,12 @@ Content-Type: image/png
 
 fake image bytes
 --X--
+
+### List documents (page 1, 20 per page)
+GET {{host}}/documents?page=1&pageSize=20
+
+### Get one document (change the id)
+GET {{host}}/documents/1
+
+### Missing document (expect 404)
+GET {{host}}/documents/999999

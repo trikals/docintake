@@ -2,6 +2,7 @@ using DocIntake.Api.Data;
 using DocIntake.Api.Models;
 using DocIntake.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DocIntake.Api.Controllers;
 
@@ -65,5 +66,41 @@ public class DocumentsController(
 
         log.LogInformation("Document {DocumentId} uploaded: {FileType}, {Size} bytes", document.Id, document.FileType, document.FileSize);
         return Created($"/documents/{document.Id}", DocumentResponse.From(document));
+    }
+
+    /// <summary>List documents, newest first. pageSize is capped at 50.</summary>
+    [HttpGet]
+    [ProducesResponseType<PagedResponse<DocumentResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<DocumentResponse>>> List(
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken ct = default)
+    {
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 50);
+
+        var query = db.Documents.AsNoTracking().Where(d => !d.IsArchived);
+        var total = await query.CountAsync(ct);
+        var items = await query
+            .OrderByDescending(d => d.CreatedAt).ThenByDescending(d => d.Id)
+            .Skip((page - 1) * pageSize).Take(pageSize)
+            .ToListAsync(ct);
+
+        log.LogInformation("Listed documents: page {Page}, size {PageSize}, returned {Count} of {Total}", page, pageSize, items.Count, total);
+        return Ok(new PagedResponse<DocumentResponse>(items.Select(DocumentResponse.From).ToList(), page, pageSize, total));
+    }
+
+    /// <summary>Get one document's metadata.</summary>
+    [HttpGet("{id:int}")]
+    [ProducesResponseType<DocumentResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(int id, CancellationToken ct)
+    {
+        var document = await db.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id && !d.IsArchived, ct);
+        if (document is null)
+        {
+            log.LogWarning("Document {DocumentId} not found", id);
+            return Problem("Document not found.", statusCode: StatusCodes.Status404NotFound);
+        }
+
+        return Ok(DocumentResponse.From(document));
     }
 }
