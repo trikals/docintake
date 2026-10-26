@@ -18,5 +18,10 @@ public class DocumentMapper : IEntityTypeConfiguration<Document>
         builder.Property(d => d.FileType).HasDefaultValue(FileType.Unknown);
         builder.Property(d => d.PageCount).IsRequired(false);
         builder.Property(d => d.FileSize).IsRequired();
+        builder.Property(d => d.DocumentType).HasConversion<string>().HasMaxLength(30).IsRequired(false);
+        builder.Property(d => d.Status).HasConversion<string>().HasMaxLength(20).HasDefaultValue(DocumentStatus.Received);
+        builder.Property(d => d.ConfirmedAt).IsRequired(false);
+
+        builder.HasIndex(d => d.Status);
     }
 }

@@ -18,6 +18,14 @@ public class Document
     public int? PageCount { get; set; }
     public long FileSize { get; set; }
 
+    /// <summary>Null until classified by the model or chosen by the user.</summary>
+    public DocumentType? DocumentType { get; set; }
+
+    public DocumentStatus Status { get; set; } = DocumentStatus.Received;
+
+    /// <summary>When a person confirmed the extracted data.</summary>
+    public DateTime? ConfirmedAt { get; set; }
+
     public static Document Create(string fileName, string contentType, long fileSize) => new()
     {
         FileName = fileName,
