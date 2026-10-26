@@ -26,6 +26,7 @@ try
     builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
     builder.Services.AddDocumentStorage(builder.Configuration);
     builder.Services.AddTextExtraction(builder.Configuration);
+    builder.Services.AddDocumentExtractor(builder.Configuration);
 
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();

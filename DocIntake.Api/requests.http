@@ -53,3 +53,12 @@ DELETE {{host}}/documents/1
 
 ### Delete again (expect 404)
 DELETE {{host}}/documents/1
+
+### Extract (let the extractor classify)
+POST {{host}}/documents/1/extract
+
+### Extract with the type chosen by the user
+POST {{host}}/documents/1/extract
+Content-Type: application/json
+
+{ "documentType": "Invoice" }

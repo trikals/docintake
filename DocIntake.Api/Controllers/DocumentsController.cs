@@ -2,6 +2,7 @@ using DocIntake.Api.Data;
 using DocIntake.Api.Models;
 using DocIntake.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace DocIntake.Api.Controllers;
@@ -11,6 +12,7 @@ namespace DocIntake.Api.Controllers;
 public class DocumentsController(
     AppDbContext db,
     IDocumentStorage storage,
+    DocumentExtractionService extraction,
     ILogger<DocumentsController> log) : ControllerBase
 {
     private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
@@ -159,5 +161,29 @@ public class DocumentsController(
 
         log.LogInformation("Document {DocumentId} deleted", id);
         return NoContent();
+    }
+
+    /// <summary>
+    /// Run extraction: read the text, classify (unless documentType is given), extract, validate.
+    /// Always returns 200 with the outcome in the body; a failed attempt has outcome Failed and an errorCode.
+    /// </summary>
+    [HttpPost("{id:int}/extract")]
+    [ProducesResponseType<ExtractionResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Extract(
+        int id,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] ExtractRequest? request,
+        CancellationToken ct)
+    {
+        var run = await extraction.RunAsync(id, request?.DocumentType, ct);
+
+        IActionResult result = run.Status switch
+        {
+            ExtractionRunStatus.NotFound => Problem("Document not found.", statusCode: StatusCodes.Status404NotFound),
+            ExtractionRunStatus.AlreadyConfirmed => Problem("This document is already confirmed and cannot be extracted again.", statusCode: StatusCodes.Status409Conflict),
+            _ => Ok(ExtractionResponse.From(run))
+        };
+        return result;
     }
 }
