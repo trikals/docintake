@@ -7,6 +7,9 @@
 ### Health
 GET {{host}}/health
 
+### Readiness (checks the database)
+GET {{host}}/ready
+
 ### Upload an invoice (PDF)
 POST {{host}}/documents
 Authorization: Bearer {{token}}

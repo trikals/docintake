@@ -1,6 +1,7 @@
 using DocIntake.Api.Configuration;
 using DocIntake.Api.Data;
 using DocIntake.Api.Services;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Context;
@@ -37,7 +38,8 @@ try
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
 
-    builder.Services.AddHealthChecks();
+    builder.Services.AddHealthChecks()
+        .AddCheck<DatabaseHealthCheck>("database", tags: ["ready"]);
     builder.Services.AddOpenApi();
 
     builder.Services.AddControllers()
@@ -59,7 +61,7 @@ try
             if (ex != null || httpContext.Response.StatusCode >= 500)
                 return LogEventLevel.Error;
 
-            return httpContext.Request.Path.StartsWithSegments("/health")
+            return httpContext.Request.Path.StartsWithSegments("/health") || httpContext.Request.Path.StartsWithSegments("/ready")
                 ? LogEventLevel.Verbose
                 : LogEventLevel.Information;
         };
@@ -86,7 +88,9 @@ try
 
     }
 
-    app.MapHealthChecks("/health");
+    // /health = liveness: the process is up (no dependencies checked). /ready = readiness: the database is reachable.
+    app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
+    app.MapHealthChecks("/ready", new HealthCheckOptions { Predicate = c => c.Tags.Contains("ready") });
 
     app.MapControllers();
 
