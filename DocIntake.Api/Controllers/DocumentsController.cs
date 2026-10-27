@@ -5,6 +5,7 @@ using DocIntake.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace DocIntake.Api.Controllers;
@@ -26,6 +27,7 @@ public class DocumentsController(
     /// <summary>Upload a PDF, DOCX or TXT file (multipart form field "file").</summary>
     [HttpPost]
     [Authorize(Policy = AuthPolicies.Write)]
+    [EnableRateLimiting(RateLimitServiceExtensions.HeavyPolicy)]
     [ProducesResponseType<DocumentResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status413PayloadTooLarge)]
@@ -180,9 +182,11 @@ public class DocumentsController(
     /// </summary>
     [HttpPost("{id:int}/extract")]
     [Authorize(Policy = AuthPolicies.Write)]
+    [EnableRateLimiting(RateLimitServiceExtensions.HeavyPolicy)]
     [ProducesResponseType<ExtractionResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status429TooManyRequests)]
     public async Task<IActionResult> Extract(
         int id,
         [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] ExtractRequest? request,
@@ -193,6 +197,7 @@ public class DocumentsController(
         IActionResult result = run.Status switch
         {
             ExtractionRunStatus.NotFound => Problem("Document not found.", statusCode: StatusCodes.Status404NotFound),
+            ExtractionRunStatus.QuotaExceeded => DailyLimitReached(),
             ExtractionRunStatus.AlreadyConfirmed => Problem("This document is already confirmed and cannot be extracted again.", statusCode: StatusCodes.Status409Conflict),
             _ => Ok(ExtractionResponse.From(run))
         };
@@ -225,5 +230,12 @@ public class DocumentsController(
             _ => Ok(new ConfirmResponse(DocumentResponse.From(run.Document!), run.Issues!))
         };
         return result;
+    }
+
+    private IActionResult DailyLimitReached()
+    {
+        var now = DateTime.UtcNow;
+        Response.Headers.RetryAfter = ((int)(now.Date.AddDays(1) - now).TotalSeconds).ToString();
+        return Problem("The daily extraction limit has been reached. It resets at 00:00 UTC.", statusCode: StatusCodes.Status429TooManyRequests);
     }
 }

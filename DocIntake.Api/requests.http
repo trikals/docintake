@@ -68,7 +68,7 @@ DELETE {{host}}/documents/1
 Authorization: Bearer {{token}}
 
 ### Extract (let the extractor classify)
-POST {{host}}/documents/2/extract
+POST {{host}}/documents/4/extract
 Authorization: Bearer {{token}}
 
 ### Extract with the type chosen by the user
@@ -79,7 +79,7 @@ Content-Type: application/json
 { "documentType": "Invoice" }
 
 ### Confirm after extracting an invoice (valid data -> 200). Run extract on the document first.
-POST {{host}}/documents/1/confirm
+POST {{host}}/documents/3/confirm
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -140,7 +140,7 @@ Content-Type: application/json
 { "acknowledgeIssues": true, "data": { "vendorName": "X" } }
 
 ### Confirm a BANK STATEMENT (use the id of an extracted bank statement; the body must match the document type)
-POST {{host}}/documents/2/confirm
+POST {{host}}/documents/4/confirm
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

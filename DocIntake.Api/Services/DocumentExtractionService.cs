@@ -1,13 +1,15 @@
 using System.Diagnostics;
 using System.Text.Json;
+using DocIntake.Api.Configuration;
 using DocIntake.Api.Data;
 using DocIntake.Api.Models;
 using DocIntake.Api.Services.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DocIntake.Api.Services;
 
-public enum ExtractionRunStatus { NotFound, AlreadyConfirmed, Completed }
+public enum ExtractionRunStatus { NotFound, AlreadyConfirmed, QuotaExceeded, Completed }
 
 /// <summary>Outcome of one extraction run. When Completed, Extraction says whether it succeeded or failed.</summary>
 public sealed record ExtractionRun(
@@ -24,6 +26,7 @@ public sealed record ExtractionRun(
 public class DocumentExtractionService(
     AppDbContext db,
     ICurrentUser user,
+    IOptions<QuotaOptions> quota,
     IDocumentStorage storage,
     IDocumentTextExtractor textExtractor,
     IDocumentExtractor extractor,
@@ -40,6 +43,13 @@ public class DocumentExtractionService(
         {
             log.LogWarning("Extraction refused: document {DocumentId} is already confirmed", documentId);
             return new ExtractionRun(ExtractionRunStatus.AlreadyConfirmed, document);
+        }
+
+        // Each run may call a paid model, so it counts against the user's daily cap before any work starts.
+        if (!await TryChargeQuotaAsync(ct))
+        {
+            log.LogWarning("Extraction refused: daily limit of {Limit} reached", quota.Value.DailyExtractions);
+            return new ExtractionRun(ExtractionRunStatus.QuotaExceeded, document);
         }
 
         DocumentType? type = requestedType is DocumentType.Unknown ? null : requestedType;
@@ -137,6 +147,26 @@ public class DocumentExtractionService(
             document.Id, type.Value, extractor.Provider, issues.Count, document.Status, extraction.LatencyMs);
 
         return new ExtractionRun(ExtractionRunStatus.Completed, document, extraction, issues);
+    }
+
+    /// <summary>
+    /// Atomically counts one extraction for today (UTC). The upsert only increments while the count is below the cap,
+    /// so concurrent requests cannot push a user over it; zero affected rows means the cap is reached.
+    /// </summary>
+    private async Task<bool> TryChargeQuotaAsync(CancellationToken ct)
+    {
+        var cap = quota.Value.DailyExtractions;
+        if (cap <= 0) return false;
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var affected = await db.Database.ExecuteSqlInterpolatedAsync($"""
+            INSERT INTO "UsageDays" ("OwnerId", "Day", "ExtractionCount")
+            VALUES ({user.Id}, {today}, 1)
+            ON CONFLICT ("OwnerId", "Day")
+            DO UPDATE SET "ExtractionCount" = "UsageDays"."ExtractionCount" + 1
+            WHERE "UsageDays"."ExtractionCount" < {cap}
+            """, ct);
+        return affected > 0;
     }
 
     private async Task<ExtractionRun> FailAsync(Document document, DocumentType type, string errorCode, CancellationToken ct)

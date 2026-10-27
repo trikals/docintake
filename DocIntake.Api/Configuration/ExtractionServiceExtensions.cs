@@ -19,6 +19,7 @@ public static class ExtractionServiceExtensions
                 throw new InvalidOperationException($"Unknown Extraction:Provider '{options.Provider}'.");
         }
 
+        services.Configure<QuotaOptions>(configuration.GetSection("Quotas"));
         services.AddScoped<DocumentExtractionService>();
         return services;
     }

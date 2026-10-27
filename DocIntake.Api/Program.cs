@@ -27,6 +27,7 @@ try
 
     builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
     builder.Services.AddAppAuthentication(builder.Configuration);
+    builder.Services.AddAppRateLimiting(builder.Configuration);
     builder.Services.AddDocumentStorage(builder.Configuration);
     builder.Services.AddTextExtraction(builder.Configuration);
     builder.Services.AddDocumentExtractor(builder.Configuration);
@@ -68,6 +69,7 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseRateLimiter();
 
     // Every log line written while handling a request carries the caller's id.
     app.Use(async (httpContext, next) =>

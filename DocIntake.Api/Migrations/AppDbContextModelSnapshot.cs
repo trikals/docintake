@@ -463,6 +463,33 @@ namespace DocIntake.Api.Migrations
                     b.ToTable("InvoiceLines", (string)null);
                 });
 
+            modelBuilder.Entity("DocIntake.Api.Models.UsageDay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Day")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ExtractionCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId", "Day")
+                        .IsUnique();
+
+                    b.ToTable("UsageDays", (string)null);
+                });
+
             modelBuilder.Entity("DocIntake.Api.Models.UtilityBill", b =>
                 {
                     b.Property<int>("Id")

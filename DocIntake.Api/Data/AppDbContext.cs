@@ -8,6 +8,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Document> Documents { get; set; } = null!;
     public DbSet<DocumentText> DocumentTexts { get; set; } = null!;
     public DbSet<Extraction> Extractions { get; set; } = null!;
+    public DbSet<UsageDay> UsageDays { get; set; } = null!;
 
     // Confirmed data, one set per document type
     public DbSet<Invoice> Invoices { get; set; } = null!;
