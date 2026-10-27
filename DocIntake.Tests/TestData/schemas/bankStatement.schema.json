@@ -9,6 +9,14 @@
     "accountHolder": {
       "type": "string"
     },
+    "accountType": {
+      "type": "string",
+      "enum": [
+        "Checking",
+        "Savings",
+        "Other"
+      ]
+    },
     "accountNumberMasked": {
       "type": "string"
     },
@@ -54,6 +62,7 @@
   "required": [
     "institutionName",
     "accountHolder",
+    "accountType",
     "accountNumberMasked",
     "periodStart",
     "periodEnd",

@@ -10,6 +10,7 @@
   "expected": {
     "institutionName": "Cobblestone Federal Credit Union",
     "accountHolder": "Elena Castellanos",
+    "accountType": "Savings",
     "accountNumberMasked": "3005",
     "periodStart": "2026-04-01",
     "periodEnd": "2026-04-30",

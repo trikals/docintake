@@ -5,6 +5,7 @@
   "expected": {
     "institutionName": "Iron Gate Bank",
     "accountHolder": "Tomas Brzezinski",
+    "accountType": "Checking",
     "accountNumberMasked": "0671",
     "periodStart": "2026-06-01",
     "periodEnd": "2026-06-30",

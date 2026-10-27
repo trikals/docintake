@@ -5,6 +5,7 @@
   "expected": {
     "institutionName": "Lakeview Savings & Trust",
     "accountHolder": "Marcus Oyelaran",
+    "accountType": "Savings",
     "accountNumberMasked": "7759",
     "periodStart": "2026-02-01",
     "periodEnd": "2026-02-28",

@@ -10,6 +10,7 @@
   "expected": {
     "institutionName": "Harbor Light Bank",
     "accountHolder": "Jordan K. Ames",
+    "accountType": "Checking",
     "accountNumberMasked": "0801",
     "periodStart": "2026-08-01",
     "periodEnd": "2026-08-31",

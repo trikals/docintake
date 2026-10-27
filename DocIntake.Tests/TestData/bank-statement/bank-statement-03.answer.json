@@ -5,6 +5,7 @@
   "expected": {
     "institutionName": "Prairie State Credit Union",
     "accountHolder": "Priya Nandakumar",
+    "accountType": "Checking",
     "accountNumberMasked": "8754",
     "periodStart": "2026-01-01",
     "periodEnd": "2026-01-31",

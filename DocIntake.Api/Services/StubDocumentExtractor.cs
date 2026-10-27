@@ -45,7 +45,7 @@ public sealed class StubDocumentExtractor(ILogger<StubDocumentExtractor> log) : 
             },
             DocumentType.BankStatement => new
             {
-                institutionName = "Stub Community Bank", accountHolder = "Sample Account Holder", accountNumberMasked = "1234",
+                institutionName = "Stub Community Bank", accountHolder = "Sample Account Holder", accountType = "Checking", accountNumberMasked = "1234",
                 periodStart = "2026-01-01", periodEnd = "2026-01-31", currency = "USD", openingBalance = 1000.00m, closingBalance = 1380.00m,
                 transactions = new[]
                 {

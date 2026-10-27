@@ -5,6 +5,7 @@
   "expected": {
     "institutionName": "Fox River Community Bank",
     "accountHolder": "Dana R. Whitfield",
+    "accountType": "Checking",
     "accountNumberMasked": "8310",
     "periodStart": "2026-06-01",
     "periodEnd": "2026-06-30",

@@ -28,6 +28,7 @@ public static partial class DocumentValidator
     };
 
     private static readonly string[] UtilityTypes = ["Electric", "Gas", "Water", "Other"];
+    private static readonly string[] AccountTypes = ["Checking", "Savings", "Other"];
 
     [GeneratedRegex(@"^\d{15}$")]
     private static partial Regex FifteenDigits();
@@ -106,6 +107,11 @@ public static partial class DocumentValidator
         r.Str(root, "", "institutionName");
         r.Str(root, "", "accountHolder");
         r.Str(root, "", "accountNumberMasked");
+
+        var accountType = r.Str(root, "", "accountType");
+        if (accountType is not null && !AccountTypes.Contains(accountType))
+            r.Add("InvalidValue", "accountType", "Account type must be Checking, Savings or Other.");
+
         r.Str(root, "", "currency");
         var start = r.Date(root, "", "periodStart");
         var end = r.Date(root, "", "periodEnd");
