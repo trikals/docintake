@@ -15,14 +15,14 @@ public sealed record ConfirmRun(ConfirmStatus Status, Document? Document = null,
 /// The data is validated again: the person may have introduced new errors.
 /// Logs identifiers, types and counts only, never field values.
 /// </summary>
-public class DocumentConfirmationService(AppDbContext db, ILogger<DocumentConfirmationService> log)
+public class DocumentConfirmationService(AppDbContext db, ICurrentUser user, ILogger<DocumentConfirmationService> log)
 {
     /// <summary>Problems with the shape of the data. These can never be acknowledged away: the data could not be saved.</summary>
     private static readonly HashSet<string> StructuralRules = ["InvalidJson", "MissingField", "InvalidValue"];
 
     public async Task<ConfirmRun> ConfirmAsync(int documentId, JsonElement data, bool acknowledgeIssues, CancellationToken ct)
     {
-        var document = await db.Documents.FirstOrDefaultAsync(d => d.Id == documentId && !d.IsArchived, ct);
+        var document = await db.Documents.OwnedBy(user.Id).FirstOrDefaultAsync(d => d.Id == documentId && !d.IsArchived, ct);
         if (document is null)
             return new ConfirmRun(ConfirmStatus.NotFound);
 

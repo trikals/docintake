@@ -1,6 +1,8 @@
+using DocIntake.Api.Configuration;
 using DocIntake.Api.Data;
 using DocIntake.Api.Models;
 using DocIntake.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 namespace DocIntake.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("documents")]
 public class DocumentsController(
     AppDbContext db,
+    ICurrentUser currentUser,
     IDocumentStorage storage,
     DocumentExtractionService extraction,
     DocumentConfirmationService confirmation,
@@ -21,6 +25,7 @@ public class DocumentsController(
 
     /// <summary>Upload a PDF, DOCX or TXT file (multipart form field "file").</summary>
     [HttpPost]
+    [Authorize(Policy = AuthPolicies.Write)]
     [ProducesResponseType<DocumentResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status413PayloadTooLarge)]
@@ -43,7 +48,7 @@ public class DocumentsController(
             return Problem("File name is required.", statusCode: StatusCodes.Status400BadRequest);
         }
 
-        var document = Document.Create(Path.GetFileName(file.FileName), file.ContentType, file.Length);
+        var document = Document.Create(currentUser.Id, Path.GetFileName(file.FileName), file.ContentType, file.Length);
         if (document.FileType is not (FileType.Pdf or FileType.Docx or FileType.Text))
         {
             log.LogWarning("Upload rejected: unsupported type {ContentType}", file.ContentType);
@@ -74,6 +79,7 @@ public class DocumentsController(
 
     /// <summary>List documents, newest first. pageSize is capped at 50.</summary>
     [HttpGet]
+    [Authorize(Policy = AuthPolicies.Read)]
     [ProducesResponseType<PagedResponse<DocumentResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResponse<DocumentResponse>>> List(
         [FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken ct = default)
@@ -81,7 +87,7 @@ public class DocumentsController(
         page = Math.Max(page, 1);
         pageSize = Math.Clamp(pageSize, 1, 50);
 
-        var query = db.Documents.AsNoTracking().Where(d => !d.IsArchived);
+        var query = db.Documents.AsNoTracking().OwnedBy(currentUser.Id).Where(d => !d.IsArchived);
         var total = await query.CountAsync(ct);
         var items = await query
             .OrderByDescending(d => d.CreatedAt).ThenByDescending(d => d.Id)
@@ -94,6 +100,7 @@ public class DocumentsController(
 
     /// <summary>Get one document with its latest extraction (draft and issues) and, once confirmed, its confirmed data.</summary>
     [HttpGet("{id:int}")]
+    [Authorize(Policy = AuthPolicies.Read)]
     [ProducesResponseType<DocumentDetailResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(int id, CancellationToken ct)
@@ -110,11 +117,12 @@ public class DocumentsController(
 
     /// <summary>Stream the original file (shown inline, so a PDF opens in the browser's viewer).</summary>
     [HttpGet("{id:int}/file")]
+    [Authorize(Policy = AuthPolicies.Read)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetFile(int id, CancellationToken ct)
     {
-        var document = await db.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id && !d.IsArchived, ct);
+        var document = await db.Documents.AsNoTracking().OwnedBy(currentUser.Id).FirstOrDefaultAsync(d => d.Id == id && !d.IsArchived, ct);
         if (document is null)
         {
             log.LogWarning("File requested for missing document {DocumentId}", id);
@@ -136,11 +144,12 @@ public class DocumentsController(
 
     /// <summary>Delete the document row and its stored file.</summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = AuthPolicies.Write)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id, CancellationToken ct)
     {
-        var document = await db.Documents.FirstOrDefaultAsync(d => d.Id == id, ct);
+        var document = await db.Documents.OwnedBy(currentUser.Id).FirstOrDefaultAsync(d => d.Id == id, ct);
         if (document is null)
         {
             log.LogWarning("Delete requested for missing document {DocumentId}", id);
@@ -170,6 +179,7 @@ public class DocumentsController(
     /// Always returns 200 with the outcome in the body; a failed attempt has outcome Failed and an errorCode.
     /// </summary>
     [HttpPost("{id:int}/extract")]
+    [Authorize(Policy = AuthPolicies.Write)]
     [ProducesResponseType<ExtractionResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
@@ -194,6 +204,7 @@ public class DocumentsController(
     /// Malformed data returns 400. Remaining validation issues return 409 until acknowledgeIssues is true.
     /// </summary>
     [HttpPost("{id:int}/confirm")]
+    [Authorize(Policy = AuthPolicies.Write)]
     [ProducesResponseType<ConfirmResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ConfirmIssuesResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]

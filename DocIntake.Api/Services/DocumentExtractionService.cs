@@ -23,6 +23,7 @@ public sealed record ExtractionRun(
 /// </summary>
 public class DocumentExtractionService(
     AppDbContext db,
+    ICurrentUser user,
     IDocumentStorage storage,
     IDocumentTextExtractor textExtractor,
     IDocumentExtractor extractor,
@@ -32,7 +33,7 @@ public class DocumentExtractionService(
 
     public async Task<ExtractionRun> RunAsync(int documentId, DocumentType? requestedType, CancellationToken ct)
     {
-        var document = await db.Documents.FirstOrDefaultAsync(d => d.Id == documentId && !d.IsArchived, ct);
+        var document = await db.Documents.OwnedBy(user.Id).FirstOrDefaultAsync(d => d.Id == documentId && !d.IsArchived, ct);
         if (document is null)
             return new ExtractionRun(ExtractionRunStatus.NotFound);
         if (document.Status == DocumentStatus.Confirmed)

@@ -3,6 +3,7 @@ using DocIntake.Api.Data;
 using DocIntake.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 
 // Bootstrap logger: captures failures that happen before the host is built
@@ -25,6 +26,7 @@ try
         ?? throw new InvalidOperationException("Connection string 'Default' is not configured.");
 
     builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+    builder.Services.AddAppAuthentication(builder.Configuration);
     builder.Services.AddDocumentStorage(builder.Configuration);
     builder.Services.AddTextExtraction(builder.Configuration);
     builder.Services.AddDocumentExtractor(builder.Configuration);
@@ -47,6 +49,10 @@ try
     // load balancer hits them every few seconds; failed ones still show.
     app.UseSerilogRequestLogging(options =>
     {
+        // The caller's id on the request summary line; resolved at the end of the request, after authentication.
+        options.EnrichDiagnosticContext = (diagnostics, httpContext) =>
+            diagnostics.Set("UserId", httpContext.User.FindFirst("sub")?.Value ?? "anonymous");
+
         options.GetLevel = (httpContext, elapsedMs, ex) =>
         {
             if (ex != null || httpContext.Response.StatusCode >= 500)
@@ -59,6 +65,16 @@ try
     });
 
     app.UseExceptionHandler();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    // Every log line written while handling a request carries the caller's id.
+    app.Use(async (httpContext, next) =>
+    {
+        using (LogContext.PushProperty("UserId", httpContext.User.FindFirst("sub")?.Value ?? "anonymous"))
+            await next();
+    });
 
     if (app.Environment.IsDevelopment())
     {

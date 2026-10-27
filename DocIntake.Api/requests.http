@@ -1,10 +1,15 @@
 @host = http://localhost:5237
+# Tokens come from a git-ignored file named .env next to this file, one line per user:
+#   TOKEN_USER1=eyJ...   TOKEN_USER2=eyJ...   TOKEN_READER=eyJ...
+# To act as another user, change the name below to TOKEN_USER2 or TOKEN_READER.
+@token = {{$dotenv TOKEN_USER1}}
 
 ### Health
 GET {{host}}/health
 
 ### Upload an invoice (PDF)
 POST {{host}}/documents
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=X
 
 --X
@@ -16,6 +21,7 @@ Content-Type: application/pdf
 
 ### Upload a text file (TXT)
 POST {{host}}/documents
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=X
 
 --X
@@ -27,6 +33,7 @@ Content-Type: text/plain
 
 ### Unsupported type (expect 415)
 POST {{host}}/documents
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=X
 
 --X
@@ -38,33 +45,42 @@ fake image bytes
 
 ### List documents (page 1, 20 per page)
 GET {{host}}/documents?page=1&pageSize=20
+Authorization: Bearer {{token}}
 
 ### Get one document (change the id)
 GET {{host}}/documents/1
+Authorization: Bearer {{token}}
 
 ### Missing document (expect 404)
 GET {{host}}/documents/999999
+Authorization: Bearer {{token}}
 
 ### Download original (open in a browser instead to see the PDF viewer)
 GET {{host}}/documents/1/file
+Authorization: Bearer {{token}}
 
 ### Delete a document (removes row and blob)
 DELETE {{host}}/documents/1
+Authorization: Bearer {{token}}
 
 ### Delete again (expect 404)
 DELETE {{host}}/documents/1
+Authorization: Bearer {{token}}
 
 ### Extract (let the extractor classify)
 POST {{host}}/documents/2/extract
+Authorization: Bearer {{token}}
 
 ### Extract with the type chosen by the user
 POST {{host}}/documents/1/extract
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 { "documentType": "Invoice" }
 
 ### Confirm after extracting an invoice (valid data -> 200). Run extract on the document first.
 POST {{host}}/documents/1/confirm
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -82,6 +98,7 @@ Content-Type: application/json
 
 ### Confirm with a wrong total, not acknowledged (expect 409 with the issue)
 POST {{host}}/documents/2/confirm
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -99,6 +116,7 @@ Content-Type: application/json
 
 ### Same wrong total, acknowledged (expect 200)
 POST {{host}}/documents/1/confirm
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -116,12 +134,14 @@ Content-Type: application/json
 
 ### Malformed data (missing fields, expect 400)
 POST {{host}}/documents/1/confirm
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 { "acknowledgeIssues": true, "data": { "vendorName": "X" } }
 
 ### Confirm a BANK STATEMENT (use the id of an extracted bank statement; the body must match the document type)
 POST {{host}}/documents/2/confirm
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {

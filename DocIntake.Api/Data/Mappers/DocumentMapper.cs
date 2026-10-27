@@ -11,6 +11,7 @@ public class DocumentMapper : IEntityTypeConfiguration<Document>
         builder.HasKey(d => d.Id);
 
         builder.Property(d => d.StorageId).IsRequired().HasDefaultValueSql("gen_random_uuid()");
+        builder.Property(d => d.OwnerId).IsRequired().HasMaxLength(200);
         builder.Property(d => d.FileName).IsRequired();
         builder.Property(d => d.ContentType).IsRequired();
         builder.Property(d => d.IsArchived).HasDefaultValue(false);
@@ -23,5 +24,6 @@ public class DocumentMapper : IEntityTypeConfiguration<Document>
         builder.Property(d => d.ConfirmedAt).IsRequired(false);
 
         builder.HasIndex(d => d.Status);
+        builder.HasIndex(d => new { d.OwnerId, d.CreatedAt });
     }
 }

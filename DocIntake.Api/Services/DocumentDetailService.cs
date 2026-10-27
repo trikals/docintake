@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 namespace DocIntake.Api.Services;
 
 /// <summary>Assembles a document with its latest extraction and, once confirmed, its confirmed data.</summary>
-public class DocumentDetailService(AppDbContext db)
+public class DocumentDetailService(AppDbContext db, ICurrentUser user)
 {
     public async Task<DocumentDetailResponse?> GetAsync(int documentId, CancellationToken ct)
     {
-        var document = await db.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == documentId && !d.IsArchived, ct);
+        var document = await db.Documents.AsNoTracking().OwnedBy(user.Id).FirstOrDefaultAsync(d => d.Id == documentId && !d.IsArchived, ct);
         if (document is null)
             return null;
 

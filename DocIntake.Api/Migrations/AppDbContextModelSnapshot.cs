@@ -235,6 +235,11 @@ namespace DocIntake.Api.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<int?>("PageCount")
                         .HasColumnType("integer");
 
@@ -253,6 +258,8 @@ namespace DocIntake.Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Status");
+
+                    b.HasIndex("OwnerId", "CreatedAt");
 
                     b.ToTable("Documents", (string)null);
                 });
