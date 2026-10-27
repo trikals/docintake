@@ -13,6 +13,7 @@ public class DocumentsController(
     AppDbContext db,
     IDocumentStorage storage,
     DocumentExtractionService extraction,
+    DocumentConfirmationService confirmation,
     ILogger<DocumentsController> log) : ControllerBase
 {
     private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
@@ -183,6 +184,33 @@ public class DocumentsController(
             ExtractionRunStatus.NotFound => Problem("Document not found.", statusCode: StatusCodes.Status404NotFound),
             ExtractionRunStatus.AlreadyConfirmed => Problem("This document is already confirmed and cannot be extracted again.", statusCode: StatusCodes.Status409Conflict),
             _ => Ok(ExtractionResponse.From(run))
+        };
+        return result;
+    }
+
+    /// <summary>
+    /// Save the person's edited data as the confirmed record. The data is validated again.
+    /// Malformed data returns 400. Remaining validation issues return 409 until acknowledgeIssues is true.
+    /// </summary>
+    [HttpPost("{id:int}/confirm")]
+    [ProducesResponseType<ConfirmResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ConfirmIssuesResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ConfirmIssuesResponse>(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Confirm(int id, [FromBody] ConfirmRequest request, CancellationToken ct)
+    {
+        if (request.Data.ValueKind != System.Text.Json.JsonValueKind.Object)
+            return Problem("'data' must be a JSON object.", statusCode: StatusCodes.Status400BadRequest);
+
+        var run = await confirmation.ConfirmAsync(id, request.Data, request.AcknowledgeIssues, ct);
+
+        IActionResult result = run.Status switch
+        {
+            ConfirmStatus.NotFound => Problem("Document not found.", statusCode: StatusCodes.Status404NotFound),
+            ConfirmStatus.NotExtracted => Problem("Run extraction on this document before confirming it.", statusCode: StatusCodes.Status409Conflict),
+            ConfirmStatus.InvalidData => BadRequest(new ConfirmIssuesResponse("The data is incomplete or malformed and cannot be saved.", run.Issues!)),
+            ConfirmStatus.IssuesNotAcknowledged => Conflict(new ConfirmIssuesResponse("Validation issues remain. Fix them, or resend with acknowledgeIssues set to true.", run.Issues!)),
+            _ => Ok(new ConfirmResponse(DocumentResponse.From(run.Document!), run.Issues!))
         };
         return result;
     }

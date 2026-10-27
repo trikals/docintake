@@ -55,10 +55,83 @@ DELETE {{host}}/documents/1
 DELETE {{host}}/documents/1
 
 ### Extract (let the extractor classify)
-POST {{host}}/documents/1/extract
+POST {{host}}/documents/2/extract
 
 ### Extract with the type chosen by the user
 POST {{host}}/documents/1/extract
 Content-Type: application/json
 
 { "documentType": "Invoice" }
+
+### Confirm after extracting an invoice (valid data -> 200). Run extract on the document first.
+POST {{host}}/documents/1/confirm
+Content-Type: application/json
+
+{
+  "acknowledgeIssues": false,
+  "data": {
+    "vendorName": "Stub Supply Co.", "invoiceNumber": "STUB-0001", "invoiceDate": "2026-01-15", "dueDate": "2026-02-14",
+    "currency": "USD", "billTo": "Sample Customer LLC",
+    "lineItems": [
+      { "description": "Sample item", "quantity": 2, "unitPrice": 50.00, "amount": 100.00 },
+      { "description": "Second item", "quantity": 1, "unitPrice": 25.00, "amount": 25.00 }
+    ],
+    "subtotal": 125.00, "tax": 10.94, "total": 135.94
+  }
+}
+
+### Confirm with a wrong total, not acknowledged (expect 409 with the issue)
+POST {{host}}/documents/2/confirm
+Content-Type: application/json
+
+{
+  "acknowledgeIssues": false,
+  "data": {
+    "vendorName": "Stub Supply Co.", "invoiceNumber": "STUB-0001", "invoiceDate": "2026-01-15", "dueDate": "2026-02-14",
+    "currency": "USD", "billTo": "Sample Customer LLC",
+    "lineItems": [
+      { "description": "Sample item", "quantity": 2, "unitPrice": 50.00, "amount": 100.00 },
+      { "description": "Second item", "quantity": 1, "unitPrice": 25.00, "amount": 25.00 }
+    ],
+    "subtotal": 125.00, "tax": 10.94, "total": 999.00
+  }
+}
+
+### Same wrong total, acknowledged (expect 200)
+POST {{host}}/documents/1/confirm
+Content-Type: application/json
+
+{
+  "acknowledgeIssues": true,
+  "data": {
+    "vendorName": "Stub Supply Co.", "invoiceNumber": "STUB-0001", "invoiceDate": "2026-01-15", "dueDate": "2026-02-14",
+    "currency": "USD", "billTo": "Sample Customer LLC",
+    "lineItems": [
+      { "description": "Sample item", "quantity": 2, "unitPrice": 50.00, "amount": 100.00 },
+      { "description": "Second item", "quantity": 1, "unitPrice": 25.00, "amount": 25.00 }
+    ],
+    "subtotal": 125.00, "tax": 10.94, "total": 999.00
+  }
+}
+
+### Malformed data (missing fields, expect 400)
+POST {{host}}/documents/1/confirm
+Content-Type: application/json
+
+{ "acknowledgeIssues": true, "data": { "vendorName": "X" } }
+
+### Confirm a BANK STATEMENT (use the id of an extracted bank statement; the body must match the document type)
+POST {{host}}/documents/2/confirm
+Content-Type: application/json
+
+{
+  "acknowledgeIssues": false,
+  "data": {
+    "institutionName": "Stub Community Bank", "accountHolder": "Sample Account Holder", "accountType": "Checking", "accountNumberMasked": "1234",
+    "periodStart": "2026-01-01", "periodEnd": "2026-01-31", "currency": "USD", "openingBalance": 1000.00, "closingBalance": 1380.00,
+    "transactions": [
+      { "date": "2026-01-05", "description": "Deposit", "amount": 500.00 },
+      { "date": "2026-01-10", "description": "Purchase", "amount": -120.00 }
+    ]
+  }
+}

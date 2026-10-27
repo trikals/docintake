@@ -1,5 +1,6 @@
 using DocIntake.Api.Configuration;
 using DocIntake.Api.Data;
+using DocIntake.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -27,6 +28,7 @@ try
     builder.Services.AddDocumentStorage(builder.Configuration);
     builder.Services.AddTextExtraction(builder.Configuration);
     builder.Services.AddDocumentExtractor(builder.Configuration);
+    builder.Services.AddScoped<DocumentConfirmationService>();
 
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
