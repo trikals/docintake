@@ -29,6 +29,7 @@ try
     builder.Services.AddTextExtraction(builder.Configuration);
     builder.Services.AddDocumentExtractor(builder.Configuration);
     builder.Services.AddScoped<DocumentConfirmationService>();
+    builder.Services.AddScoped<DocumentDetailService>();
 
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();

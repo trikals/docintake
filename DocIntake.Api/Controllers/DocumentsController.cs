@@ -14,6 +14,7 @@ public class DocumentsController(
     IDocumentStorage storage,
     DocumentExtractionService extraction,
     DocumentConfirmationService confirmation,
+    DocumentDetailService detail,
     ILogger<DocumentsController> log) : ControllerBase
 {
     private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
@@ -91,20 +92,20 @@ public class DocumentsController(
         return Ok(new PagedResponse<DocumentResponse>(items.Select(DocumentResponse.From).ToList(), page, pageSize, total));
     }
 
-    /// <summary>Get one document's metadata.</summary>
+    /// <summary>Get one document with its latest extraction (draft and issues) and, once confirmed, its confirmed data.</summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType<DocumentResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<DocumentDetailResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(int id, CancellationToken ct)
     {
-        var document = await db.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id && !d.IsArchived, ct);
-        if (document is null)
+        var result = await detail.GetAsync(id, ct);
+        if (result is null)
         {
             log.LogWarning("Document {DocumentId} not found", id);
             return Problem("Document not found.", statusCode: StatusCodes.Status404NotFound);
         }
 
-        return Ok(DocumentResponse.From(document));
+        return Ok(result);
     }
 
     /// <summary>Stream the original file (shown inline, so a PDF opens in the browser's viewer).</summary>

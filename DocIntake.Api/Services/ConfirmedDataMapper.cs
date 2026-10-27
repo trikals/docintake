@@ -126,6 +126,73 @@ public static class ConfirmedDataMapper
         return bill;
     }
 
+    // ---------- Entity -> JSON (same shape as the schema; bank amounts are signed again) ----------
+
+    private static string Iso(DateOnly d) => d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+    public static JsonElement ToJson(Invoice i) => JsonSerializer.SerializeToElement(new
+    {
+        vendorName = i.VendorName,
+        invoiceNumber = i.InvoiceNumber,
+        invoiceDate = Iso(i.InvoiceDate),
+        dueDate = i.DueDate is { } due ? Iso(due) : null,
+        currency = i.Currency,
+        billTo = i.BillTo,
+        lineItems = i.Lines.OrderBy(l => l.LineNumber)
+            .Select(l => new { description = l.Description, quantity = l.Quantity, unitPrice = l.UnitPrice, amount = l.Amount }),
+        subtotal = i.Subtotal,
+        tax = i.Tax,
+        total = i.Total
+    });
+
+    public static JsonElement ToJson(BankStatement b) => JsonSerializer.SerializeToElement(new
+    {
+        institutionName = b.InstitutionName,
+        accountHolder = b.AccountHolder,
+        accountType = b.AccountType.ToString(),
+        accountNumberMasked = b.AccountNumberMasked,
+        periodStart = Iso(b.PeriodStart),
+        periodEnd = Iso(b.PeriodEnd),
+        currency = b.Currency,
+        openingBalance = b.OpeningBalance,
+        closingBalance = b.ClosingBalance,
+        transactions = b.Transactions.OrderBy(t => t.LineNumber)
+            .Select(t => new { date = Iso(t.TransactionDate), description = t.Description, amount = t.SignedAmount })
+    });
+
+    public static JsonElement ToJson(AchReturnNotice a) => JsonSerializer.SerializeToElement(new
+    {
+        originatorName = a.OriginatorName,
+        receiverName = a.ReceiverName,
+        rdfiName = a.RdfiName,
+        secCode = a.SecCode,
+        originalEffectiveDate = Iso(a.OriginalEffectiveDate),
+        returnDate = Iso(a.ReturnDate),
+        traceNumber = a.TraceNumber,
+        originalTraceNumber = a.OriginalTraceNumber,
+        amount = a.Amount,
+        returnReasonCode = a.ReturnReasonCode,
+        returnReasonDescription = a.ReturnReasonDescription
+    });
+
+    public static JsonElement ToJson(UtilityBill u) => JsonSerializer.SerializeToElement(new
+    {
+        providerName = u.ProviderName,
+        utilityType = u.UtilityType.ToString(),
+        accountNumberMasked = u.AccountNumberMasked,
+        serviceAddress = u.ServiceAddress,
+        statementDate = Iso(u.StatementDate),
+        periodStart = Iso(u.PeriodStart),
+        periodEnd = Iso(u.PeriodEnd),
+        dueDate = Iso(u.DueDate),
+        usage = new { quantity = u.UsageQuantity, unit = u.UsageUnit },
+        charges = u.Charges.OrderBy(c => c.LineNumber).Select(c => new { description = c.Description, amount = c.Amount }),
+        previousBalance = u.PreviousBalance,
+        paymentsReceived = u.PaymentsReceived,
+        currentCharges = u.CurrentCharges,
+        amountDue = u.AmountDue
+    });
+
     private static string Str(JsonElement e, string name) => e.GetProperty(name).GetString()!;
 
     private static string? OptStr(JsonElement e, string name) =>
