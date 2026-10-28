@@ -16,6 +16,8 @@ namespace DocIntake.Tests.Integration;
 /// </summary>
 public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
+    public const int QuotaPerDay = 3;
+
     private readonly PostgreSqlContainer _db = new PostgreSqlBuilder()
         .WithImage("postgres:17")
         .Build();
@@ -28,6 +30,9 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         // test override could be applied, so this is the reliable way to point it at the container.
         Environment.SetEnvironmentVariable("ConnectionStrings__Default", _db.GetConnectionString());
         Environment.SetEnvironmentVariable("Database__MigrateOnStartup", "true");
+
+        // A small daily cap so the quota test can reach it quickly.
+        Environment.SetEnvironmentVariable("Quotas__DailyExtractions", QuotaPerDay.ToString());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
