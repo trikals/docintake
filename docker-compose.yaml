@@ -52,6 +52,14 @@ services:
       Storage__AccessKey: dev
       Storage__SecretKey: dev-only
       Database__MigrateOnStartup: "true"
+      # Token validation settings, normally read from appsettings.Development.json (not in the image) and user secrets.
+      Authentication__Schemes__Bearer__ValidIssuer: dotnet-user-jwts
+      Authentication__Schemes__Bearer__ValidAudiences__0: http://localhost:5237
+      Authentication__Schemes__Bearer__ValidAudiences__1: https://localhost:7065
+    # The dev signing key comes from a git-ignored .env file in this folder. Never commit it.
+    env_file:
+      - path: .env
+        required: false
 
 volumes:
   pgdata:
