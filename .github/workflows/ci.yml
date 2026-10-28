@@ -1,0 +1,54 @@
+# Continuous integration: on every push and pull request, prove that the code builds,
+# the tests pass and the container image builds. Nothing is deployed from this file.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# The workflow only needs to read the repository. Least privilege by default.
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the older run that is still going.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Install the .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore packages
+        run: dotnet restore DocIntake.slnx
+
+      - name: Build
+        run: dotnet build DocIntake.slnx --configuration Release --no-restore
+
+      - name: Run the tests
+        run: dotnet test DocIntake.slnx --configuration Release --no-build --verbosity normal
+
+  docker-image:
+    # Only runs if the build and tests passed.
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Build the container image
+        run: docker build --tag docintake-api:${{ github.sha }} .
+
+      - name: Show the image size
+        run: docker images docintake-api
