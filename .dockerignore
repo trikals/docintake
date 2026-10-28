@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.DS_Store
+**/*.env
+.git/
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose*.yaml
+DocIntake.Tests/
+**/requests.http
+**/appsettings.Development.json
+README.md

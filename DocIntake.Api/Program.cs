@@ -48,6 +48,15 @@ try
 
     var app = builder.Build();
 
+    // Local containers only: create/update the schema at startup. Real deployments run migrations as a separate step.
+    if (app.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
+    {
+        using var scope = app.Services.CreateScope();
+        Log.Information("Applying database migrations");
+        await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
+        Log.Information("Database migrations applied");
+    }
+
     // One summary line per request. Successful /health calls are hidden because the
     // load balancer hits them every few seconds; failed ones still show.
     app.UseSerilogRequestLogging(options =>

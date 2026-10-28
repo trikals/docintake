@@ -30,6 +30,29 @@ services:
       interval: 5s
       retries: 3
 
+  # The API itself, built from the Dockerfile. Off by default so day-to-day F5 debugging only starts the dependencies.
+  # Start everything with:  docker compose --profile app up --build
+  api:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      s3mock:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=docintake;Username=docintake;Password=dev-only-password"
+      Storage__BucketName: documents
+      Storage__ServiceUrl: http://s3mock:9090
+      Storage__AccessKey: dev
+      Storage__SecretKey: dev-only
+      Database__MigrateOnStartup: "true"
+
 volumes:
   pgdata:
   s3mockdata:
