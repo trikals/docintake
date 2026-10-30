@@ -1,0 +1,75 @@
+# Publish: build the container image on a native ARM machine, scan it, and push it to
+# Amazon ECR. GitHub proves its identity to AWS with a short-lived OIDC token, so no
+# AWS access key is stored anywhere. Nothing is deployed from this file.
+name: Publish image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# id-token: write lets this workflow ask GitHub for its signed identity token.
+# contents: read is all it needs from the repository itself.
+permissions:
+  id-token: write
+  contents: read
+
+# Never push two images for the same branch at once.
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-2
+  ECR_REPOSITORY: docintake-api
+
+jobs:
+  publish:
+    # A native ARM runner, so the image is built for the same architecture that runs on
+    # Fargate (Graviton) with no emulation. Free for public repositories.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # Exchange GitHub's identity token for temporary AWS credentials. AWS checks that the
+      # token comes from this repository and the main branch (the role's trust policy).
+      - name: Sign in to AWS with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # The tag is the commit hash. The repository has tag immutability on, so a tag can
+      # never be overwritten: an image always matches the code it was built from.
+      - name: Build the container image
+        env:
+          IMAGE: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        run: docker build --tag "$IMAGE" .
+
+      # Scan before pushing, so an image with a fixable serious vulnerability never reaches
+      # the registry.
+      - name: Scan the image for vulnerabilities
+        env:
+          IMAGE: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.58.0 image \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --exit-code 1 \
+            "$IMAGE"
+
+      - name: Push the image to ECR
+        env:
+          IMAGE: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        run: docker push "$IMAGE"
+
+      - name: Record what was pushed
+        run: echo "Pushed ${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
