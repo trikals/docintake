@@ -23,8 +23,10 @@ try
 
     // Configuration sources, lowest to highest priority: appsettings.json,
     // appsettings.{Environment}.json, user secrets (Development), environment variables, command line.
-    var connectionString = builder.Configuration.GetConnectionString("Default")
-        ?? throw new InvalidOperationException("Connection string 'Default' is not configured.");
+    // The connection string may leave out host, user and password; they are then read from
+    // PGHOST, PGUSER and PGPASSWORD (filled from Secrets Manager by ECS on AWS).
+    var connectionString = DatabaseConnection.Resolve(builder.Configuration);
+    Log.Information("Database target {DatabaseTarget}", DatabaseConnection.Describe(connectionString));
 
     builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
     builder.Services.AddAppAuthentication(builder.Configuration);
